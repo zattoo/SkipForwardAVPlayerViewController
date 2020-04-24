@@ -1,17 +1,17 @@
 # Description
 
-When streaming a channel that does not allow skipping forward, there is no way in apple's API to achieve that. 
-The only way is to set requiresLinearPlayback to true, but this would block the remote, and won't be possible to skip backwards or even pause the stream.
+When streaming a channel that does not allow skipping forward, there is no way with Apple's API to achieve that. 
+We were trying to set requiresLinearPlayback to true, but this would block input from the remote for skip backwards or even pause the stream.
 
 ![](skipForward.gif)
 
 # Steps
-In this project, we set isSkipForwardEnabled to false, and in the delegate method playerViewController:timeToSeekAfterUserNavigatedFromTime:toTime: we return the currentTime in case isSkipForwardEnabled = false. 
-But the user is able to skip forward with a long press remote.
+In this project, we set isSkipForwardEnabled to false, and in the delegate method `playerViewController:timeToSeekAfterUserNavigatedFromTime:toTime:` we return the currentTime in case isSkipForwardEnabled = false. 
+Unfortunately the user is still able to skip forward by long press on the remote (see [this similar radar](https://github.com/dcordero/Radar-45550317))
 
-# Improvements
-Would be better if we had something like isSkipForwardAllowed or isSkipBackwardsAllowed, and if this is set to false, would block long press remote only.  
-This will be very beneficial in cases when the stream doesn't alloud skipping forward.
+# Feature Request
+We would like to have something like `isSkipForwardAllowed` or `isSkipBackwardsAllowed` in order to block all kinds of scrubbing and skipping in the corresponding direction. 
+This would be very beneficial in cases when the business case does not allow skipping in certain direction.
 
 # Version
 tvOS 13.4

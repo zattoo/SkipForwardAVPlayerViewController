@@ -9,12 +9,16 @@
 import UIKit
 import AVKit
 
-class ViewController: AVPlayerViewController, AVPlayerViewControllerDelegate {
+final class ViewController: AVPlayerViewController, AVPlayerViewControllerDelegate {
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        delegate = self
+        isSkipForwardEnabled = false
+    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        delegate = self
-        isSkipForwardEnabled = false
         play(stream: URL(string: "https://demo-hls5-live.zahs.tv/hd/master.m3u8?timeshift=100")!)
     }
     
@@ -23,7 +27,7 @@ class ViewController: AVPlayerViewController, AVPlayerViewControllerDelegate {
     func playerViewController(_ playerViewController: AVPlayerViewController, timeToSeekAfterUserNavigatedFrom oldTime: CMTime, to targetTime: CMTime) -> CMTime {
         guard let player = playerViewController.player else { return oldTime }
         
-        guard playerViewController.isSkipForwardEnabled && playerViewController.isSkipBackwardEnabled else {
+        guard (playerViewController.isSkipForwardEnabled && targetTime.value > -1) || (playerViewController.isSkipBackwardEnabled && targetTime.value < 1) else {
             return player.currentTime()
         }
         
